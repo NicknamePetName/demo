@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.excel.FigureNumberDAO">
+
+    <resultMap id="figureNumberResultMap" type="com.example.demo.dataobject.excel.FigureNumberDO">
+        <id column="id" property="id"/>
+        <result column="figure_number" property="figureNumber"/>
+        <result column="figure_page_id" property="figurePageId"/>
+        <result column="ply" property="ply"/>
+        <result column="width" property="width"/>
+        <result column="length" property="length"/>
+        <result column="gmt_created" property="gmtCreated"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.example.demo.dataobject.excel.FigureNumberDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO figure_number(figure_number,figure_page_id,ply,width,length,gmt_created,gmt_modified)
+        VALUES (#{figureNumber},#{figurePageId},#{ply},#{width},#{length},now(),now())
+    </insert>
+
+</mapper>

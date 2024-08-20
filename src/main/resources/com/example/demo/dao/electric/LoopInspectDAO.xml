@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.electric.LoopInspectDAO">
+
+    <resultMap id="loopInspectResultMap" type="com.example.demo.dataobject.electric.LoopInspectDO">
+        <id column="id" property="id"/>
+        <result column="loop_vdc" property="loopVdc"/>
+        <result column="voltage" property="voltage"/>
+        <result column="formula" property="formula"/>
+        <result column="l1_prevoltage" property="l1Prevoltage"/>
+        <result column="l2_prevoltage" property="l2Prevoltage"/>
+        <result column="l3_prevoltage" property="l3Prevoltage"/>
+        <result column="n_prevoltage" property="nPrevoltage"/>
+        <result column="assist_prevoltage" property="assistPrevoltage"/>
+
+        <result column="l1_no_prevoltage" property="l1NoPrevoltage"/>
+        <result column="l2_no_prevoltage" property="l2NoPrevoltage"/>
+        <result column="l3_no_prevoltage" property="l3NoPrevoltage"/>
+        <result column="n_no_prevoltage" property="nNoPrevoltage"/>
+        <result column="assist_no_prevoltage" property="assistNoPrevoltage"/>
+
+        <result column="l1_leakage_current" property="l1LeakageCurrent"/>
+        <result column="l2_leakage_current" property="l2LeakageCurrent"/>
+        <result column="l3_leakage_current" property="l3LeakageCurrent"/>
+        <result column="n_leakage_current" property="nLeakageCurrent"/>
+        <result column="assist_leakage_current" property="assistLeakageCurrent"/>
+
+
+        <result column="gmt_created" property="gmtCreated"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.example.demo.dataobject.electric.LoopInspectDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO loop_inspect(loop_vdc,voltage,formula,
+                         l1_prevoltage,l2_prevoltage,l3_prevoltage,n_prevoltage,assist_prevoltage,
+                         l1_no_prevoltage,l2_no_prevoltage,l3_no_prevoltage,n_no_prevoltage,assist_no_prevoltage,
+                         l1_leakage_current,l2_leakage_current,l3_leakage_current,n_leakage_current,assist_leakage_current,
+                         gmt_created,gmt_modified)
+        VALUES (#{loopVdc},#{voltage},#{formula},
+                #{l1Prevoltage},#{l2Prevoltage},#{l3Prevoltage},#{nPrevoltage},#{assistPrevoltage},
+                #{l1NoPrevoltage},#{l2NoPrevoltage},#{l3NoPrevoltage},#{nNoPrevoltage},#{assistNoPrevoltage},
+                #{l1LeakageCurrent},#{l2LeakageCurrent},#{l3LeakageCurrent},#{nLeakageCurrent},#{assistLeakageCurrent},
+                now(),now())
+    </insert>
+
+
+
+</mapper>

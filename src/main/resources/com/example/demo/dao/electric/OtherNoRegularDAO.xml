@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.electric.OtherNoRegularDAO">
+
+    <resultMap id="otherNoRegularResultMap" type="com.example.demo.dataobject.electric.OtherNoRegularDO">
+        <id column="id" property="id"/>
+        <result column="one_text" property="oneText"/>
+        <result column="two_text" property="twoText"/>
+        <result column="three_text" property="threeText"/>
+        <result column="four_text" property="fourText"/>
+        <result column="five_text" property="fiveText"/>
+        <result column="six_text" property="sixText"/>
+
+        <result column="one_corrector" property="oneCorrector"/>
+        <result column="two_corrector" property="twoCorrector"/>
+        <result column="three_corrector" property="threeCorrector"/>
+        <result column="four_corrector" property="fourCorrector"/>
+        <result column="five_corrector" property="fiveCorrector"/>
+        <result column="six_corrector" property="sixCorrector"/>
+
+        <result column="one_recheck" property="oneRecheck"/>
+        <result column="two_recheck" property="twoRecheck"/>
+        <result column="three_recheck" property="threeRecheck"/>
+        <result column="four_recheck" property="fourRecheck"/>
+        <result column="five_recheck" property="fiveRecheck"/>
+        <result column="six_recheck" property="sixRecheck"/>
+
+        <result column="gmt_created" property="gmtCreated"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.example.demo.dataobject.electric.OtherNoRegularDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO other_no_regular(one_text,two_text,three_text,four_text,five_text,six_text,
+                         one_corrector,two_corrector,three_corrector,four_corrector,five_corrector,six_corrector,
+                         one_recheck,two_recheck,three_recheck,four_recheck,five_recheck,six_recheck,
+                         gmt_created,gmt_modified)
+        VALUES (#{oneText},#{twoText},#{threeText},#{fourText},#{fiveText},#{sixText},
+                #{oneCorrector},#{twoCorrector},#{threeCorrector},#{fourCorrector},#{fiveCorrector},#{sixCorrector},
+                #{oneRecheck},#{twoRecheck},#{threeRecheck},#{fourRecheck},#{fiveRecheck},#{sixRecheck},
+                now(),now())
+    </insert>
+
+
+
+</mapper>

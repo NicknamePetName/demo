@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.electric.InspectItemDAO">
+
+    <resultMap id="inspectItemResultMap" type="com.example.demo.dataobject.electric.InspectItemDO">
+        <id column="id" property="id"/>
+        <result column="location_result" property="locationResult"/>
+        <result column="location_corrector" property="locationCorrector"/>
+        <result column="location_retest" property="locationRetest"/>
+
+        <result column="phase_sequence_result" property="phaseSequenceResult"/>
+        <result column="phase_sequence_corrector" property="phaseSequenceCorrector"/>
+        <result column="phase_sequence_retest" property="phaseSequenceRetest"/>
+
+        <result column="secondary_element_result" property="secondaryElementResult"/>
+        <result column="secondary_element_corrector" property="secondaryElementCorrector"/>
+        <result column="secondary_element_retest" property="secondaryElementRetest"/>
+
+        <result column="light_result" property="lightResult"/>
+        <result column="light_corrector" property="lightCorrector"/>
+        <result column="light_retest" property="lightRetest"/>
+
+        <result column="meter_show_result" property="meterShowResult"/>
+        <result column="meter_show_corrector" property="meterShowCorrector"/>
+        <result column="meter_show_retest" property="meterShowRetest"/>
+
+        <result column="meter_param_result" property="meterParamResult"/>
+        <result column="meter_param_corrector" property="meterParamCorrector"/>
+        <result column="meter_param_retest" property="meterParamRetest"/>
+
+        <result column="signal_result" property="signalResult"/>
+        <result column="signal_corrector" property="signalCorrector"/>
+        <result column="signal_retest" property="signalRetest"/>
+
+        <result column="electric_linkage_result" property="electricLinkageResult"/>
+        <result column="electric_linkage_corrector" property="electricLinkageCorrector"/>
+        <result column="electric_linkage_retest" property="electricLinkageRetest"/>
+
+        <result column="cable_interlock_result" property="cableInterlockResult"/>
+        <result column="cable_interlock_corrector" property="cableInterlockCorrector"/>
+        <result column="cable_interlock_retest" property="cableInterlockRetest"/>
+
+        <result column="all_function_result" property="allFunctionResult"/>
+        <result column="all_function_corrector" property="allFunctionCorrector"/>
+        <result column="all_function_retest" property="allFunctionRetest"/>
+
+        <result column="power_controller_result" property="powerControllerResult"/>
+        <result column="power_controller_corrector" property="powerControllerCorrector"/>
+        <result column="power_controller_retest" property="powerControllerRetest"/>
+
+        <result column="switch_result" property="switchResult"/>
+        <result column="switch_corrector" property="switchCorrector"/>
+        <result column="switch_retest" property="switchRetest"/>
+
+        <result column="fan_temperature_result" property="fanTemperatureResult"/>
+        <result column="fan_temperature_corrector" property="fanTemperatureCorrector"/>
+        <result column="fan_temperature_retest" property="fanTemperatureRetest"/>
+
+        <result column="arrester_result" property="arresterResult"/>
+        <result column="arrester_corrector" property="arresterCorrector"/>
+        <result column="arrester_retest" property="arresterRetest"/>
+
+        <result column="door_land_result" property="doorLandResult"/>
+        <result column="door_land_corrector" property="doorLandCorrector"/>
+        <result column="door_land_retest" property="doorLandRetest"/>
+
+        <result column="element_land_result" property="elementLandResult"/>
+        <result column="element_land_corrector" property="elementLandCorrector"/>
+        <result column="element_land_retest" property="elementLandRetest"/>
+
+        <result column="special_point_result" property="specialPointResult"/>
+        <result column="special_point_corrector" property="specialPointCorrector"/>
+        <result column="special_point_retest" property="specialPointRetest"/>
+
+        <result column="blot_result" property="blotResult"/>
+        <result column="blot_corrector" property="blotCorrector"/>
+        <result column="blot_retest" property="blotRetest"/>
+
+        <result column="sundries_result" property="sundriesResult"/>
+        <result column="sundries_corrector" property="sundriesCorrector"/>
+        <result column="sundries_retest" property="sundriesRetest"/>
+
+        <result column="gmt_created" property="gmtCreated"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+
+
+    <insert id="insert" parameterType="com.example.demo.dataobject.electric.InspectItemDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO inspect_item (
+            location_result, location_corrector, location_retest, phase_sequence_result,
+            phase_sequence_corrector, phase_sequence_retest, secondary_element_result,
+            secondary_element_corrector, secondary_element_retest, light_result, light_corrector,
+            light_retest, meter_show_result, meter_show_corrector, meter_show_retest, meter_param_result,
+            meter_param_corrector, meter_param_retest, signal_result, signal_corrector, signal_retest,
+            electric_linkage_result, electric_linkage_corrector, electric_linkage_retest,
+            cable_interlock_result, cable_interlock_corrector, cable_interlock_retest,
+            all_function_result, all_function_corrector, all_function_retest,
+            power_controller_result, power_controller_corrector, power_controller_retest,
+            switch_result, switch_corrector, switch_retest, fan_temperature_result,
+            fan_temperature_corrector, fan_temperature_retest, arrester_result, arrester_corrector,
+            arrester_retest, door_land_result, door_land_corrector, door_land_retest,
+            element_land_result, element_land_corrector, element_land_retest,
+            special_point_result, special_point_corrector, special_point_retest,
+            blot_result, blot_corrector, blot_retest, sundries_result, sundries_corrector,
+            sundries_retest, gmt_created, gmt_modified
+        ) VALUES (
+                     #{locationResult}, #{locationCorrector}, #{locationRetest}, #{phaseSequenceResult},
+                     #{phaseSequenceCorrector}, #{phaseSequenceRetest}, #{secondaryElementResult},
+                     #{secondaryElementCorrector}, #{secondaryElementRetest}, #{lightResult}, #{lightCorrector},
+                     #{lightRetest}, #{meterShowResult}, #{meterShowCorrector}, #{meterShowRetest}, #{meterParamResult},
+                     #{meterParamCorrector}, #{meterParamRetest}, #{signalResult}, #{signalCorrector}, #{signalRetest},
+                     #{electricLinkageResult}, #{electricLinkageCorrector}, #{electricLinkageRetest},
+                     #{cableInterlockResult}, #{cableInterlockCorrector}, #{cableInterlockRetest},
+                     #{allFunctionResult}, #{allFunctionCorrector}, #{allFunctionRetest},
+                     #{powerControllerResult}, #{powerControllerCorrector}, #{powerControllerRetest},
+                     #{switchResult}, #{switchCorrector}, #{switchRetest}, #{fanTemperatureResult},
+                     #{fanTemperatureCorrector}, #{fanTemperatureRetest}, #{arresterResult}, #{arresterCorrector},
+                     #{arresterRetest}, #{doorLandResult}, #{doorLandCorrector}, #{doorLandRetest},
+                     #{elementLandResult}, #{elementLandCorrector}, #{elementLandRetest},
+                     #{specialPointResult}, #{specialPointCorrector}, #{specialPointRetest},
+                     #{blotResult}, #{blotCorrector}, #{blotRetest}, #{sundriesResult}, #{sundriesCorrector},
+                     #{sundriesRetest}, now(), now()
+                 )
+    </insert>
+</mapper>
