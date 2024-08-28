@@ -18,18 +18,18 @@ public class JwtUtil {
      * @param map
      * @return
      */
-    public static String produceToken(Map<String,String> map) {
+
+        public static String produceToken(Map<String,String> map) {
 
 //        Map<String, Object> map = new HashMap<>();
 //        Calendar instance = Calendar.getInstance();
 //        instance.add(Calendar.SECOND, 20);
 //        return JWT.create()
 //                .withHeader(map) //可以不设定，就是使用默认的
-////                .withClaim("userId",20)//payload  //自定义用户名
+//                .withClaim("userId",20)//payload  //自定义用户名
 //                .withClaim("username", user.getUserName())
 //                .withExpiresAt(instance.getTime()) //指定令牌过期时间
 //                .sign(Algorithm.HMAC256(SIGNATURE));
-
         JWTCreator.Builder builder = JWT.create();
         map.forEach(builder::withClaim);
         Calendar instance = Calendar.getInstance();

@@ -1,6 +1,5 @@
 package com.example.demo.service.excel.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import com.example.demo.helper.EasyExcelHelper;
 import com.example.demo.model.Result;
@@ -19,6 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -26,12 +28,14 @@ import java.util.stream.Stream;
 @Service
 public class MatchPathServiceImpl implements MatchPathService {
 
-    private final static FigureMatch figureMatch = new FigureMatch();
+    private final FigureMatch figureMatch = new FigureMatch();
     private static final Logger log = LoggerFactory.getLogger(MatchPathServiceImpl.class);
 
     @Autowired
     private EasyExcelHelper easyExcelHelper;
 
+    @Autowired
+    private ThreadPoolExecutor threadPoolExecutor;
 
     /**
      * 返回匹配结果
@@ -58,31 +62,54 @@ public class MatchPathServiceImpl implements MatchPathService {
 
 
 
-        figureMatch.getFigureNumberMap().forEach((figureKey, figureValue) -> {
-            List<FigurePage> figurePageList = new ArrayList<>();
-            figureMatch.getFigurePagePathMap().forEach((pathKey, pathValue) -> {
-                try {
-                    if (regular(figureKey, pathKey)) {
-                        FigurePage figurePage = new FigurePage();
-                        figurePage.setFileName(pathKey);
-                        figurePage.setFilePath(pathValue);
-                        figurePageList.add(figurePage);
-                        // 匹配到的图纸文件名删除，剩下的就是没有匹配到的图纸
-                        figureMatch.getResidueFigurePageMap().remove(pathKey);
-                    }
-                } catch (Exception e) {
-//                    System.out.println("正则匹配图号错误：" + figureKey);
-                    figureMatch.getRegularErrorFigureNumberMap().put(figureKey, figureValue);
-                }
-            });
+//        figureMatch.getFigureNumberMap().forEach((figureKey, figureValue) -> {
+//            List<FigurePage> figurePageList = new ArrayList<>();
+//            figureMatch.getFigurePagePathMap().forEach((pathKey, pathValue) -> {
+//                try {
+//                    if (regular(figureKey, pathKey)) {
+//                        FigurePage figurePage = new FigurePage();
+//                        figurePage.setFileName(pathKey);
+//                        figurePage.setFilePath(pathValue);
+//                        figurePageList.add(figurePage);
+//                        // 匹配到的图纸文件名删除，剩下的就是没有匹配到的图纸
+//                        figureMatch.getResidueFigurePageMap().remove(pathKey);
+//                    }
+//                } catch (Exception e) {
+////                    System.out.println("正则匹配图号错误：" + figureKey);
+//                    figureMatch.getRegularErrorFigureNumberMap().put(figureKey, figureValue);
+//                }
+//            });
+//            if (figurePageList.isEmpty()) {
+//                // 剩余图号
+//                figureMatch.getResidueFigureNumberList().add(figureValue);
+//            }
+//            figureMatch.getResult().put(figureValue, figurePageList);
+//        });
 
 
-            if (figurePageList.isEmpty()) {
-                // 剩余图号
-                figureMatch.getResidueFigureNumberList().add(figureValue);
+
+        // 使用线程池并发执行匹配任务
+        Map<String, FigureNumber> figureNumberMap = figureMatch.getFigureNumberMap();
+        List<Future<Void>> futures = new ArrayList<>();
+        for (Map.Entry<String, FigureNumber> entry : figureNumberMap.entrySet()) {
+            Callable<Void> task = new FigureMatchTask(entry.getKey(), entry.getValue(), figureMatch);
+            futures.add(threadPoolExecutor.submit(task));
+        }
+
+        try {
+            // 等待所有任务完成
+            for (Future<Void> future : futures) {
+                future.get(); // 这一步会抛出异常，如果任何一个任务执行中出现异常
             }
-            figureMatch.getResult().put(figureValue, figurePageList);
-        });
+        } catch (Exception e) {
+            log.error("Error during figure matching", e);
+            result.setCode("303");
+            result.setSuccess(false);
+            result.setMessage("线程池异常");
+            return result;
+        }
+
+
         long time4 = System.currentTimeMillis();
         System.out.println("图号匹配图纸所用时间：" + (time4 - time3) + "ms");
 
@@ -100,6 +127,44 @@ public class MatchPathServiceImpl implements MatchPathService {
         result.setMessage("图号匹配图纸成功");
         return result;
     }
+
+    private class FigureMatchTask implements Callable<Void> {
+        private final String figureKey;
+        private final FigureNumber figureValue;
+        private final FigureMatch figureMatch;
+
+        public FigureMatchTask(String figureKey, FigureNumber figureValue, FigureMatch figureMatch) {
+            this.figureKey = figureKey;
+            this.figureValue = figureValue;
+            this.figureMatch = figureMatch;
+        }
+
+        @Override
+        public Void call() throws Exception {
+            List<FigurePage> figurePageList = new ArrayList<>();
+            for (Map.Entry<String, String> pathEntry : figureMatch.getFigurePagePathMap().entrySet()) {
+                try {
+                    if (regular(figureKey, pathEntry.getKey())) {
+                        FigurePage figurePage = new FigurePage();
+                        figurePage.setFileName(pathEntry.getKey());
+                        figurePage.setFilePath(pathEntry.getValue());
+                        figurePageList.add(figurePage);
+                        figureMatch.getResidueFigurePageMap().remove(pathEntry.getKey());
+                    }
+                }catch (Exception e) {
+                    figureMatch.getRegularErrorFigureNumberMap().put(figureKey, figureValue);
+                }
+            }
+
+            if (figurePageList.isEmpty()) {
+                figureMatch.getResidueFigureNumberList().add(figureValue);
+            } else {
+                figureMatch.getResult().put(figureValue, figurePageList);
+            }
+            return null;
+        }
+    }
+
 
     private void init() {
         figureMatch.setFigurePagePathMap(new LinkedHashMap<>());
@@ -144,7 +209,7 @@ public class MatchPathServiceImpl implements MatchPathService {
         }
     }
 
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         List<String> validFileSuffix = Arrays.asList("dwg", "DWG", "stp", "STP", "sldprt", "SLDPRT", "sldasm", "SLDASM", "SLDDRW", "slddrw");
 
         Object[] array = validFileSuffix.toArray();
@@ -156,8 +221,7 @@ public class MatchPathServiceImpl implements MatchPathService {
         arr[0] = "aa";
         System.out.println(stringList + "\n");
         System.out.println(validFileSuffix);
-
-    }
+    }*/
 
     /**
      * 递归遍历给定文件夹及其子文件夹中的所有文件

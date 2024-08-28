@@ -20,8 +20,8 @@ public class ThreadPoolExecutorConfig {
     @Bean
     public ThreadPoolExecutor threadPoolExecutor() {
         return new ThreadPoolExecutor(
-                6,
-                12,
+                5,
+                10,
                 100,
                 TimeUnit.SECONDS,
                 workQueue,
